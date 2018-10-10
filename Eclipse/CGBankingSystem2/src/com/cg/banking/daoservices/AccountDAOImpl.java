@@ -41,6 +41,7 @@ public class AccountDAOImpl implements AccountDAO {
 	@Override
 	public boolean updateDeposit(long accountNo, float amount) {
 		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
@@ -58,20 +59,25 @@ public class AccountDAOImpl implements AccountDAO {
 	}
 
 	@Override
-	public Account findOne(long accountNo) {
+	public Account findOne(long accountNo) throws AccountNotFoundException, SQLException {
 		try {
 			PreparedStatement pstmt1=conn.prepareStatement("select * from Account where accountNo=?");
 			pstmt1.setLong(1, accountNo);
 			ResultSet accountRS = pstmt1.executeQuery();
-			if(accountRS.next());
-			Account account=new Account(accountRS.getInt("pinNumber"),accountRS.getString("accountType"),accountRS.getString("status"),accountRS.getFloat("accountBalance"),accountRS.getLong("accountNO"));
+			if(accountRS.next()){
+			 Account account = new Account(accountRS.getInt("pinNumber"),accountRS.getString("accountType"),accountRS.getString("status"),accountRS.getFloat("accountBalance"),accountRS.getLong("accountNO"));
+			 return account;
+			}
 			else
-				throw AccountNotFoundException;
+				throw new AccountNotFoundException();
 			// TODO Auto-generated method stub
-			return null;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw e;
+		} catch (AccountNotFoundException e) {
+			// TODO Auto-generated catch block
+			throw e;
 		}
 	}
 

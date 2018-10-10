@@ -35,19 +35,41 @@ public class BankingServicesImpl implements BankingServices {
 	public float depositAmount(long accountNo, float amount)
 			throws AccountNotFoundException, BankingServicesDownException, AccountBlockedException {
 		// TODO Auto-generated method stub
-		Account account=accountDAO.findOne(accountNo);
-		if(account.getAccountNo()==accountNo)
-		accountDAO.updateDeposit(accountNo, amount);
-		else
-			throw AccountNotFoundException("Account doesn't Exist",);
-		return 0;
+		try {
+			Account account=accountDAO.findOne(accountNo);
+			if(account.getAccountNo()==accountNo)
+			accountDAO.updateDeposit(accountNo, amount);
+			return amount;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new BankingServicesDownException("Server down.");
+		}catch (AccountNotFoundException e) {
+			// TODO: handle exception
+			throw new AccountNotFoundException("Account doesn't exist");
+		}
 	}
 
 	@Override
 	public float withdrawAmount(long accountNo, float amount, int pinNumber) throws InsufficientAmountException,
 			AccountNotFoundException, InvalidPinNumberException, BankingServicesDownException, AccountBlockedException {
 		// TODO Auto-generated method stub
-		accountDAO.updateWithdrwal(accountNo, amount, pinNumber);
+		try {
+			Account account=accountDAO.findOne(accountNo);
+				if(account.getAccountBalance()>amount){
+					if(account.getPinNumber()==pinNumber)
+						accountDAO.updateWithdrwal(accountNo, amount, pinNumber);
+					else
+						throw new InvalidPinNumberException();
+				}
+				else 
+					throw new InsufficientAmountException();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return 0;
 	}
 
@@ -82,9 +104,18 @@ public class BankingServicesImpl implements BankingServices {
 	@Override
 	public String accountStatus(long accountNo)
 			throws BankingServicesDownException, AccountNotFoundException, AccountBlockedException {
-		Account account = accountDAO.findOne(accountNo);
-		// TODO Auto-generated method stub
-		return account.getStatus();
+		try {
+			Account account = accountDAO.findOne(accountNo);
+			// TODO Auto-generated method stub
+			return account.getStatus();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw BankingServicesDownException("Server down.");
+		}catch (AccountNotFoundException e) {
+			// TODO: handle exception
+			throw new AccountNotFoundException("Account doesn't exist.");
+		}
 	}
 
 }
