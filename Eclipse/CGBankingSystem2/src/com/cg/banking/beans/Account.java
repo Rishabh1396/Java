@@ -48,6 +48,14 @@ public class Account {
 		this.status = status;
 		this.accountBalance = accountBalance;
 		this.accountNo = accountNo;
+	}
+	public Account(String accountType, String status, float accountBalance,
+			long accountNo) {
+		super();
+		this.accountType = accountType;
+		this.status = status;
+		this.accountBalance = accountBalance;
+		this.accountNo = accountNo;
 	}	
 
 }

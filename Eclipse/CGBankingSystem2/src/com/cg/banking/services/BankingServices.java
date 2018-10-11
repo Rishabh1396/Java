@@ -1,5 +1,6 @@
 package com.cg.banking.services;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.cg.banking.beans.Account;
@@ -31,10 +32,10 @@ public interface BankingServices {
 			BankingServicesDownException, AccountBlockedException  ;
 
 	Account getAccountDetails(long accountNo)
-			throws  AccountNotFoundException,BankingServicesDownException;
+			throws  AccountNotFoundException,BankingServicesDownException, SQLException;
 
 	List<Account> getAllAccountDetails()
-			throws BankingServicesDownException;
+			throws BankingServicesDownException, AccountNotFoundException;
 
 	List<Transaction> getAccountAllTransaction(long accountNo)
 			throws BankingServicesDownException,
